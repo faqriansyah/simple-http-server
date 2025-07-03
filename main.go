@@ -13,7 +13,6 @@ func handleArgs() (string, string) {
 	path := currentPath
 	port := ":8080"
 
-	// Better use cobra??
 	switch len(os.Args) {
 	case 3: // If both PATH and PORT are available
 		path = filepath.Join(currentPath, os.Args[1])
