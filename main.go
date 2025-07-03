@@ -7,22 +7,13 @@ import (
 	"path/filepath"
 )
 
-// Storing root folder
-var root string
-
-func runServer() {
-	path, port := handleArgs()
-	root = path
-
-	http.HandleFunc("/", globalHandler)
-	http.ListenAndServe(port, nil)
-}
-
 func handleArgs() (string, string) {
-	currentPath, _ := os.Getwd() // HANDLE THE ERROR
+	// Path where program currently run
+	currentPath, _ := os.Getwd()
 	path := currentPath
 	port := ":8080"
 
+	// Better use cobra??
 	switch len(os.Args) {
 	case 3: // If both PATH and PORT are available
 		path = filepath.Join(currentPath, os.Args[1])
@@ -30,17 +21,28 @@ func handleArgs() (string, string) {
 	case 2: // If only PATH is available
 		path = filepath.Join(currentPath, os.Args[1])
 	default: // Handle unexpected number of arguments (e.g., more than 3)
-		return path, port // Return default port and empty path, or handle as needed
+		return path, port // Return default port
 	}
 
 	return path, port
 }
 
-func globalHandler(w http.ResponseWriter, r *http.Request) {
-	// Serving file as a response from root folder
-	http.ServeFile(w, r, filepath.Clean(filepath.Join(root, r.URL.Path)))
+func globalHandler(root string) http.HandlerFunc {
+	// Closure for getting a root path
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Serving file as a response from root folder
+		http.ServeFile(w, r, filepath.Clean(filepath.Join(root, r.URL.Path)))
+	}
+}
+
+func runServer(root string, port string) {
+	// The "/" is an entry point for all URL
+	http.HandleFunc("/", globalHandler(root))
+	http.ListenAndServe(port, nil)
 }
 
 func main() {
-	runServer()
+	root, port := handleArgs()
+	fmt.Println("Running on http://localhost:8080")
+	runServer(root, port)
 }
