@@ -7,14 +7,14 @@ import (
 )
 
 // Run initializes and starts the HTTP server.
-func Run(root string, port string) error {
+func Run(root string, port string) {
 	// Create the handler for serving static files
-	staticHandler := handler.StaticFileServer(root)
+	handler := handler.Handler(root)
 
 	// Register the handler for all paths
-	http.Handle("/", staticHandler) // Use http.Handle with an http.Handler
+	http.Handle("/", handler)
 
-	log.Printf("Starting static file server on port %s, serving from %s", port, root)
+	log.Printf("Server start at port %v from %v", port, root)
 	// ListenAndServe blocks until the server stops or an error occurs.
-	return http.ListenAndServe(port, nil) // nil uses the default ServeMux configured by http.Handle
+	http.ListenAndServe(port, nil)
 }
