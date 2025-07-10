@@ -30,8 +30,10 @@ func ParseArgs() (*Config, error) {
 		cfg.Port = fmt.Sprintf(":%s", os.Args[2])
 	case 2: // If only PATH is available
 		cfg.RootPath = filepath.Join(currentPath, os.Args[1])
+	case 1:
+		return cfg, nil
 	default: // Handle unexpected number of arguments (e.g., more than 3)
-		// It's good to inform the user about incorrect usage.
+		// Incorrect usage
 		return nil, fmt.Errorf("usage: %s [path] [port]", os.Args[0])
 	}
 
