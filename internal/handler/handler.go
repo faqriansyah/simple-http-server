@@ -3,6 +3,7 @@ package handler
 import (
 	"log"
 	"net/http"
+	"path/filepath"
 )
 
 func serveFile(root string, w http.ResponseWriter, r *http.Request) {
@@ -10,6 +11,7 @@ func serveFile(root string, w http.ResponseWriter, r *http.Request) {
 	// Use http.FileServer for robust static file serving
 	// http.FileServer internally handle the request path
 
+	log.Printf("Sending response : file %v", filepath.Base(r.RequestURI))
 	http.FileServer(http.Dir(root)).ServeHTTP(w, r)
 }
 
@@ -17,7 +19,7 @@ func serveFile(root string, w http.ResponseWriter, r *http.Request) {
 func Handler(root string) http.HandlerFunc {
 	// Closure for getting a root path
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("Receiving request")
+		log.Printf("Request : %v %v", r.Method, r.RequestURI)
 
 		serveFile(root, w, r)
 	}
