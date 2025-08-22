@@ -1,5 +1,3 @@
-> Still under construction. No, I'm not rushing. Chill.
-
 For development only, unless you enjoy pain.
 
 Sometimes I just want to run an HTML file without summoning the holy trinity of VSCode + Live Server, Laragon, or XAMPP. Yes, I know those exist. No, I don’t care. Too many clicks.
